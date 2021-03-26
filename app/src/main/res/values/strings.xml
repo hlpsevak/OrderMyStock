@@ -1,0 +1,57 @@
+<resources>
+    <string name="app_name">Order My Stock</string>
+    <string name="app_version">1.0.0</string>
+    <string name="app_developedby">Sevag Developers</string>
+    <string name="app_license">proprietary license</string>
+    <string name="action_settings">Settings</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
+    <!-- My Values -->
+    <string name="app_header">Order My Stock</string>
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome!"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+
+    <string name="tv_comp_name">Enter Company name</string>
+    <string name="tv_profile_comp_name">Company name</string>
+    <string name="tv_shop_name">Enter Shop name</string>
+    <string name="tv_profile_shop_name">Shop name</string>
+
+    <string name="tv_comp_cert">Select Company Certificate</string>
+    <string name="tv_shop_cert">Select Shop Certificate</string>
+
+    <string name="tv_comp_email">Enter Company Email-id</string>
+    <string name="tv_shop_email">Enter Shop Email-id</string>
+    <string name="tv_phone">Enter Phone no.</string>
+    <string name="tv_password">Enter Password</string>
+
+    <string name="tv_profile_contactemail">Contact Email</string>
+    <string name="tv_profile_streetline1">Street line 1</string>
+    <string name="tv_profile_streetline2">Street line 2</string>
+    <string name="tv_profile_streetline3">Street line3</string>
+    <string name="tv_profile_pincode">Pincode</string>
+    <string name="tv_profile_city">City</string>
+    <string name="tv_profile_state">State</string>
+    <string name="tv_profile_add">Address</string>
+
+    <!--String for navigation drawer -->
+    <string name="navigation_drawer_open">Open Navigation Drawer</string>
+    <string name="navigation_drawer_close">Close Navigation Drawer</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+</resources>

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "403700638557",
+    "project_id": "ordermystock-ef270",
+    "storage_bucket": "ordermystock-ef270.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:403700638557:android:f57a6aa1637f2dd412feb4",
+        "android_client_info": {
+          "package_name": "com.example.ordermystock"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "403700638557-95g5vtv79flelahh1hrfc48ee53eh05s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6zxuiReS7ljxshOv7_rWCnBeYAqjFzRk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "403700638557-95g5vtv79flelahh1hrfc48ee53eh05s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

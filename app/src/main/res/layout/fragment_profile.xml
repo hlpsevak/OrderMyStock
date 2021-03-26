@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ProfileFrag"
+    android:orientation="vertical">
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
+
+            <ImageView
+                android:id="@+id/iv_prof_img"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                tools:src="@tools:sample/backgrounds/scenic"
+                android:layout_marginTop="10dp"/>
+
+            <TextView
+                android:id="@+id/tv_prof_compshopname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/tv_profile_comp_name"
+                android:layout_marginTop="15dp" />
+
+            <EditText
+                android:id="@+id/et_prof_compshopname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="Name"
+                android:background="@drawable/edittextstyle"/>
+
+            <TextView
+                android:id="@+id/tv_prof_contactemail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="string/tv_pr"
+                android:layout_marginTop="10dp" />
+
+            <EditText
+                android:id="@+id/et_prof_contactemail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textEmailAddress"
+                android:background="@drawable/edittextstyle"/>
+
+            <TextView
+                android:id="@+id/tv_prof_add"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="TextView" />
+
+            <TextView
+                android:id="@+id/tv_prof_street1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:layout_marginTop="5dp" />
+
+            <EditText
+                android:id="@+id/et_prof_street1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="Name"
+                android:background="@drawable/edittextstyle"/>
+
+            <TextView
+                android:id="@+id/tv_prof_street2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:layout_marginTop="10dp" />
+
+            <EditText
+                android:id="@+id/et_prof_street2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="Name"
+                android:background="@drawable/edittextstyle"/>
+
+            <TextView
+                android:id="@+id/tv_prof_city"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:layout_marginTop="10dp" />
+
+            <EditText
+                android:id="@+id/et_prof_city"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="Name"
+                android:background="@drawable/edittextstyle"/>
+
+            <TextView
+                android:id="@+id/tv_prof_pincode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:layout_marginTop="10dp" />
+
+            <EditText
+                android:id="@+id/et_prof_pincode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="Name"
+                android:background="@drawable/edittextstyle"/>
+
+            <TextView
+                android:id="@+id/tv_prof_state"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:layout_marginTop="10dp" />
+
+            <EditText
+                android:id="@+id/et_prof_state"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="Name"
+                android:background="@drawable/edittextstyle"/>
+
+            <Button
+                android:id="@+id/btn_prof_update"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Update Profile"
+                android:background="@drawable/buttonstyle"
+                android:inputType="text"
+                android:textSize="18dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginBottom="20dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

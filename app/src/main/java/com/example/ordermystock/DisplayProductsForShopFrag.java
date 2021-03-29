@@ -105,8 +105,8 @@ public class DisplayProductsForShopFrag extends Fragment {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getContext(), "Finally called", Toast.LENGTH_SHORT).show();
-                ProductListForShopAdapter pdad = new ProductListForShopAdapter(currDoc);
-                ProductListForShopAdapter.ProductListForShopViewHolder vh = pdad.new ProductListForShopViewHolder(view, new ProductListForShopAdapter(currDoc));
+                ProductListForShopAdapter pdad = new ProductListForShopAdapter(getContext(),currDoc);
+                ProductListForShopAdapter.ProductListForShopViewHolder vh = pdad.new ProductListForShopViewHolder(view, new ProductListForShopAdapter(getContext(),currDoc));
                 vh.placeOrder();
             }
         });

@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.internal.ContextUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -48,6 +49,7 @@ public class ProductListForShopAdapter extends RecyclerView.Adapter<ProductListF
         UUID uuid;
         static String ordId;
         SharedPreferences prefs;
+        Context mContext;
 
         public ProductListForShopAdapter(Context context, ArrayList<DocumentSnapshot> arrdocs, ArrayList<byte[]> arrimages, DocumentSnapshot currDoc){
             prodDocsList = arrdocs;
@@ -72,12 +74,13 @@ public class ProductListForShopAdapter extends RecyclerView.Adapter<ProductListF
             MainActivity.mMenu.findItem(R.id.replacements).setVisible(true);
         }
 
-        public ProductListForShopAdapter(DocumentSnapshot currCompDoc){
+        public ProductListForShopAdapter(Context context,DocumentSnapshot currCompDoc){
 
+            prefs = PreferenceManager.getDefaultSharedPreferences(context);
             SharedPreferences.Editor editor = prefs.edit();
-            editor.putString("compIdForReplace",currComp.getId());
+            editor.putString("compIdForReplace",currCompDoc.getId());
             editor.commit();
-            Log.d("WPConstruct> ",currComp.getId());
+            Log.d("WPConstruct> ",currCompDoc.getId());
             currComp = currCompDoc;
         }
 

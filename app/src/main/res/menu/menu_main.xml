@@ -3,12 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.ordermystock.MainActivity">
 
-<!--
+
     <item android:id="@+id/search"
         android:title="search"
         android:icon="@drawable/ic_search"
         app:actionViewClass="android.widget.SearchView"
-        app:showAsAction="collapseActionView|ifRoom" /> -->
+        app:showAsAction="always|collapseActionView"
+        />
 
     <item
         android:id="@+id/replacements"

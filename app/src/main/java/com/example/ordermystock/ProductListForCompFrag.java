@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -48,7 +49,7 @@ import java.util.Map;
 public class ProductListForCompFrag extends Fragment {
 
     private RecyclerView mRecyclerView;
-    private ProductListAdapter mAdapter;
+    private static ProductListAdapter mAdapter;
     FirebaseFirestore firebaseFirestore;
     FirebaseStorage firebaseStorage;
     StorageReference storageReference;
@@ -77,6 +78,26 @@ public class ProductListForCompFrag extends Fragment {
 
     public ProductListForCompFrag() {
         // Required empty public constructor
+        MainActivity.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                Log.d("NEW TEXT: ",newText);
+                Log.d("mAdapter",mAdapter==null?"Nullhai":"NotNullnahihai");
+                if(mAdapter!=null)
+                    ProductListForCompFrag.mAdapter.getFilter().filter(newText);
+                else
+                    Log.d("ELSE","null hai bhai");
+                return false;
+            }
+        });
+
+        MainActivity.searchView.setQuery("", false);
+        MainActivity.searchView.clearFocus();
     }
 
     /**
@@ -165,12 +186,16 @@ public class ProductListForCompFrag extends Fragment {
                                                 arrdocs.add(mapdocs.get(key));
                                                 arrimages.add(mapiamges.get(key));
 
-                                                mAdapter = new ProductListAdapter(getContext(), arrdocs, arrimages);
-                                                mRecyclerView.setAdapter(mAdapter);
-                                                mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-                                                pb.setVisibility(View.GONE);
                                             }
+                                            ProductListForCompFrag.mAdapter = new ProductListAdapter(getContext(), arrdocs, arrimages);
+
+                                            mRecyclerView.setAdapter(mAdapter);
+                                            mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+                                            pb.setVisibility(View.GONE);
+                                            MainActivity.searchView.setQuery("", false);
+                                            MainActivity.searchItem.collapseActionView();
                                         }
                                     }
                                 });

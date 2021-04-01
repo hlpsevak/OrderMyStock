@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -37,6 +38,7 @@ public class OrdersPlacedReceived extends Fragment {
 
     View view;
     RecyclerView mRecyclerView;
+    OrdersPlacedReceivedAdapter mAdapter;
     ProgressBar pb;
     String comporshop, comporshopord;
     FirebaseFirestore firebaseFirestore;
@@ -55,6 +57,23 @@ public class OrdersPlacedReceived extends Fragment {
 
     public OrdersPlacedReceived() {
         // Required empty public constructor
+
+        MainActivity.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                if(mAdapter!=null)
+                    mAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+
+
     }
 
     /**
@@ -139,11 +158,12 @@ public class OrdersPlacedReceived extends Fragment {
                         Log.d("ALL DOCS"," : Appended");
                         Log.d("ALL: ",arrAllOrders.toString());
 
-                        OrdersPlacedReceivedAdapter ordersPlacedReceivedAdapter = new OrdersPlacedReceivedAdapter(getContext(),arrAllOrders, comporshop);
-                        mRecyclerView.setAdapter(ordersPlacedReceivedAdapter);
+                        mAdapter = new OrdersPlacedReceivedAdapter(getContext(),arrAllOrders, comporshop);
+                        mRecyclerView.setAdapter(mAdapter);
                         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-
+                        MainActivity.searchView.setQuery("", false);
+                        MainActivity.searchItem.collapseActionView();
                     }
 
                 }

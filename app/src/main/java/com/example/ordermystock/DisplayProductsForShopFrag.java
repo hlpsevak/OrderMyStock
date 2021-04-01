@@ -6,10 +6,12 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -25,6 +27,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+//import static com.example.ordermystock.MainActivity.*;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link DisplayProductsForShopFrag#newInstance} factory method to
@@ -33,7 +37,7 @@ import java.util.Map;
 public class DisplayProductsForShopFrag extends Fragment {
 
     private RecyclerView mRecyclerView;
-    private ProductListForShopAdapter mAdapter;
+    private static ProductListForShopAdapter mAdapter;
     FirebaseFirestore firebaseFirestore;
     FirebaseStorage firebaseStorage;
     StorageReference storageReference;
@@ -62,6 +66,21 @@ public class DisplayProductsForShopFrag extends Fragment {
 
     public DisplayProductsForShopFrag(DocumentSnapshot doc){
         currDoc = doc;
+
+        MainActivity.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                mAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+
+
     }
 
     /**
@@ -104,7 +123,7 @@ public class DisplayProductsForShopFrag extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Finally called", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "Finally called", Toast.LENGTH_SHORT).show();
                 ProductListForShopAdapter pdad = new ProductListForShopAdapter(getContext(),currDoc);
                 ProductListForShopAdapter.ProductListForShopViewHolder vh = pdad.new ProductListForShopViewHolder(view, new ProductListForShopAdapter(getContext(),currDoc));
                 vh.placeOrder();
@@ -159,6 +178,9 @@ public class DisplayProductsForShopFrag extends Fragment {
                                     mRecyclerView.setAdapter(mAdapter);
                                     mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                                     pb.setVisibility(View.GONE);
+
+                                    MainActivity.searchView.setQuery("", false);
+                                    MainActivity.searchItem.collapseActionView();
                                 }
                             }
                         });

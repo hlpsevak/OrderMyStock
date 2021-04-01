@@ -31,6 +31,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,9 +39,10 @@ import java.util.UUID;
 
 public class ProductListForShopAdapter extends RecyclerView.Adapter<ProductListForShopAdapter.ProductListForShopViewHolder> implements Filterable {
 
-        private ArrayList<DocumentSnapshot> prodDocsList = new ArrayList<>();
-        private ArrayList<DocumentSnapshot> prodDocsListCopy = new ArrayList<>();
-        private ArrayList<byte[]> prodImagesList = new ArrayList<>();
+        private ArrayList<DocumentSnapshot> prodDocsList ;
+        private ArrayList<DocumentSnapshot> prodDocsListCopy ;
+        private ArrayList<byte[]> prodImagesList ;
+        private ArrayList<byte[]> prodImagesListCopy ;
         public LayoutInflater layoutInflater;
         Map<String,String> mapOrderDetails = new HashMap<>();
         static Map<String, Map> mapOrders;
@@ -50,11 +52,13 @@ public class ProductListForShopAdapter extends RecyclerView.Adapter<ProductListF
         static String ordId;
         SharedPreferences prefs;
         Context mContext;
+        ArrayList<byte[]> filteredImageList;
 
         public ProductListForShopAdapter(Context context, ArrayList<DocumentSnapshot> arrdocs, ArrayList<byte[]> arrimages, DocumentSnapshot currDoc){
-            prodDocsList = arrdocs;
-            prodDocsListCopy = arrdocs;
-            prodImagesList = arrimages;
+            prodDocsList = new ArrayList<>(arrdocs);
+            prodDocsListCopy = new ArrayList<>(arrdocs);
+            prodImagesList = new ArrayList<>(arrimages);
+            prodImagesListCopy =  new ArrayList<>(arrimages);
             layoutInflater = LayoutInflater.from(context);
             currComp = currDoc;
             mapOrders = new HashMap<>();
@@ -115,8 +119,10 @@ public class ProductListForShopAdapter extends RecyclerView.Adapter<ProductListF
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             ArrayList<DocumentSnapshot> filteredList = new ArrayList<>();
-            if(filteredList == null || filteredList.size() == 0){
+            filteredImageList = new ArrayList<>();
+            if(constraint == null || constraint.length() == 0){
                 filteredList.addAll(prodDocsListCopy);
+                filteredImageList.addAll(prodImagesListCopy);
             }
             else{
                 String filterPattern = constraint.toString().toLowerCase().trim();
@@ -124,14 +130,25 @@ public class ProductListForShopAdapter extends RecyclerView.Adapter<ProductListF
                 for(DocumentSnapshot doc : prodDocsListCopy){
                     if(doc.get("prodname").toString().toLowerCase().contains(filterPattern)){
                         filteredList.add(doc);
+                        filteredImageList.add(prodImagesListCopy.get(prodDocsListCopy.indexOf(doc)));
+                    }
+                    else if(doc.get("prodprice").toString().toLowerCase().contains(filterPattern)){
+                        filteredList.add(doc);
+                        filteredImageList.add(prodImagesListCopy.get(prodDocsListCopy.indexOf(doc)));
+                    }
+                    else if(doc.get("proddesc").toString().toLowerCase().contains(filterPattern)){
+                        filteredList.add(doc);
+                        filteredImageList.add(prodImagesListCopy.get(prodDocsListCopy.indexOf(doc)));
                     }
                 }
             }
 
-            FilterResults results = new FilterResults();
-            results.values = filteredList;
+            FilterResults DocResults = new FilterResults();
+            DocResults.values = filteredList;
+            FilterResults ImgResults = new FilterResults();
+            ImgResults.values = filteredImageList;
 
-            return results;
+            return DocResults;
 
         }
 
@@ -139,6 +156,11 @@ public class ProductListForShopAdapter extends RecyclerView.Adapter<ProductListF
         protected void publishResults(CharSequence constraint, FilterResults results) {
             prodDocsList.clear();
             prodDocsList.addAll((ArrayList)results.values);
+            FilterResults imgResults = new FilterResults();
+            imgResults.values = filteredImageList;
+            prodImagesList.clear();
+            prodImagesList.addAll((ArrayList)imgResults.values);
+            Log.d("notifydata",results.values.toString());
             notifyDataSetChanged();
         }
     };

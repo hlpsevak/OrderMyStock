@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
     static SearchView searchView;
     static MenuInflater menuInflator;
     static Menu mMenu;
+    static MenuItem searchItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,8 +131,11 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         menuInflator.inflate(R.menu.menu_main, menu);
         menu.findItem(R.id.replacements).setVisible(false);
         mMenu = menu;
-        //MenuItem searchItem = menu.findItem(R.id.search);
-        //searchView = (SearchView)searchItem.getActionView();
+        searchItem = menu.findItem(R.id.search);
+        searchView = (SearchView)searchItem.getActionView();
+        searchView.setQueryHint("search");
+
+
         /*searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

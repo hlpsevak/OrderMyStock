@@ -31,7 +31,7 @@ public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.
     private  ArrayList<DocumentSnapshot> companyDocsList = new ArrayList<>();
     private ArrayList<DocumentSnapshot> companyDocsListCopy = new ArrayList<>();
     private ArrayList<byte[]> companyImagesList = new ArrayList<>();
-    private ArrayList<byte[]> CompanyImagesListCopy = new ArrayList<>();
+    private ArrayList<byte[]> CompanyImagesListCopy ;
     ArrayList<byte[]> filterePicsList;
     public LayoutInflater layoutInflater;
 
@@ -39,9 +39,9 @@ public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.
     public CompanyListAdapter(Context context, ArrayList<DocumentSnapshot> namesList, ArrayList<byte[]> imagesList){
         layoutInflater = LayoutInflater.from(context);
         companyDocsList = namesList;
-        companyDocsListCopy = namesList;
+        companyDocsListCopy = new ArrayList<>(namesList);
         companyImagesList = imagesList;
-        CompanyImagesListCopy  = imagesList;
+        CompanyImagesListCopy  =  new ArrayList<>(imagesList);
     }
 
     @NonNull

@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,15 +30,20 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
-public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.ProductViewHolder> {
+public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.ProductViewHolder>implements Filterable {
 
     private final ArrayList<DocumentSnapshot> prodDocsList;
+    ArrayList<DocumentSnapshot> prodDocsListCopy;
     private final ArrayList<byte[]> prodImagesList;
+    ArrayList<byte[]> prodImagesListCopy;
     public LayoutInflater layoutInflater;
+    ArrayList<byte[]> filterePicsList;
 
     public ProductListAdapter(Context context, ArrayList<DocumentSnapshot> arrdocs, ArrayList<byte[]> arrimgs){
-        prodDocsList = arrdocs;
-        prodImagesList = arrimgs;
+        prodDocsList = new ArrayList<>(arrdocs);
+        prodDocsListCopy = new ArrayList<>(arrdocs);
+        prodImagesListCopy = new ArrayList<>(arrimgs);
+        prodImagesList = new ArrayList<>(arrimgs);
         layoutInflater = LayoutInflater.from(context);
 
     }
@@ -62,6 +69,59 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
     public int getItemCount() {
         return prodDocsList.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return exampleFilter;
+    }
+
+    private Filter exampleFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            ArrayList<DocumentSnapshot> filteredList = new ArrayList<>();
+            filterePicsList = new ArrayList<>();
+
+            if(constraint == null || constraint.length() == 0){
+                filteredList.addAll(prodDocsListCopy);
+                filterePicsList.addAll(prodImagesListCopy);
+            }
+            else{
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for(DocumentSnapshot doc : prodDocsListCopy){
+                    if(doc.get("prodname").toString().toLowerCase().contains(filterPattern)){
+                        filteredList.add(doc);
+                        filterePicsList.add(prodImagesListCopy.get(prodDocsListCopy.indexOf(doc)));
+                    }
+                    else if(doc.get("prodprice").toString().toLowerCase().contains(filterPattern)){
+                        filteredList.add(doc);
+                        filterePicsList.add(prodImagesListCopy.get(prodDocsListCopy.indexOf(doc)));
+                    }
+                    else if(doc.get("proddesc").toString().toLowerCase().contains(filterPattern)){
+                        filteredList.add(doc);
+                        filterePicsList.add(prodImagesListCopy.get(prodDocsListCopy.indexOf(doc)));
+                    }
+                }
+            }
+
+            FilterResults Docresults = new FilterResults();
+            Docresults.values = filteredList;
+
+            return Docresults;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            prodDocsList.clear();
+            prodDocsList.addAll((ArrayList)results.values);
+            FilterResults imgResults = new FilterResults();
+            imgResults.values = filterePicsList;
+            prodImagesList.clear();
+            prodImagesList.addAll((ArrayList)imgResults.values);
+
+            notifyDataSetChanged();
+        }
+    };
 
     public class ProductViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView mImageView;

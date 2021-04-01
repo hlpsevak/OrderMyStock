@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -55,7 +56,7 @@ public class ReplacementFrag extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     private RecyclerView mRecyclerView;
-    private ReplacementAdapter mAdapter;
+    private static ReplacementAdapter mAdapter;
     FirebaseFirestore firebaseFirestore;
     FirebaseStorage firebaseStorage;
     StorageReference storageReference;
@@ -81,6 +82,20 @@ public class ReplacementFrag extends Fragment {
 
     public ReplacementFrag() {
         // Required empty public constructor
+        MainActivity.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                mAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+
+
     }
 
     /**
@@ -181,6 +196,8 @@ public class ReplacementFrag extends Fragment {
                                                 mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
                                                 pb.setVisibility(View.GONE);
+                                                MainActivity.searchView.setQuery("", false);
+                                                MainActivity.searchItem.collapseActionView();
                                             }
                                         }
                                     }

@@ -67,7 +67,7 @@ public class OrderProducts extends Fragment {
     public OrderProducts() {
         // Required empty public constructor
 
-        /*MainActivity.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        MainActivity.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
@@ -78,7 +78,9 @@ public class OrderProducts extends Fragment {
                 mAdapter.getFilter().filter(newText);
                 return false;
             }
-        });*/
+        });
+
+
     }
 
 
@@ -175,6 +177,9 @@ public class OrderProducts extends Fragment {
                                             mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                                             Log.d("ONCREATEVIEW","R5");
                                             pb.setVisibility(View.GONE);
+
+                                            MainActivity.searchView.setQuery("", false);
+                                            MainActivity.searchItem.collapseActionView();
                                         }
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {

@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,11 +33,12 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.prefs.PreferenceChangeEvent;
 
-public class ReplacementAdapter extends RecyclerView.Adapter<ReplacementAdapter.ReplacementViewHolder> {
+public class ReplacementAdapter extends RecyclerView.Adapter<ReplacementAdapter.ReplacementViewHolder> implements Filterable {
 
-    private ArrayList<DocumentSnapshot> prodDocsList = new ArrayList<>();
-    private ArrayList<DocumentSnapshot> prodDocsListCopy = new ArrayList<>();
-    private ArrayList<byte[]> prodImagesList = new ArrayList<>();
+    private ArrayList<DocumentSnapshot> prodDocsList;
+    private ArrayList<DocumentSnapshot> prodDocsListCopy;
+    private ArrayList<byte[]> prodImagesList ;
+    ArrayList<byte[]> prodImagesListCopy;
     public LayoutInflater layoutInflater;
     Map<String,String> mapOrderDetails = new HashMap<>();
     static Map<String, Map> mapOrders;
@@ -43,12 +46,15 @@ public class ReplacementAdapter extends RecyclerView.Adapter<ReplacementAdapter.
     ViewGroup mparent;
     SharedPreferences prefs;
     String comporshop;
+    ArrayList<byte[]> filterePicsList;
 
 
     public ReplacementAdapter(Context context, ArrayList<DocumentSnapshot> arrdocs, ArrayList<byte[]> arrimages){
-        prodDocsList = arrdocs;
-        prodDocsListCopy = arrdocs;
-        prodImagesList = arrimages;
+        prodDocsList = new ArrayList<>(arrdocs);
+        prodDocsListCopy = new ArrayList<>(arrdocs);
+        prodImagesList = new ArrayList<>(arrimages);
+        prodImagesListCopy =  new ArrayList<>(arrimages);
+
         layoutInflater = LayoutInflater.from(context);
         //currComp = currDoc;
         mapOrders = new HashMap<>();
@@ -100,6 +106,58 @@ public class ReplacementAdapter extends RecyclerView.Adapter<ReplacementAdapter.
         return prodDocsList.size();
     }
 
+    @Override
+    public Filter getFilter() {
+        return exampleFilter;
+    }
+
+    private Filter exampleFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            ArrayList<DocumentSnapshot> filteredList = new ArrayList<>();
+            filterePicsList = new ArrayList<>();
+
+            if(constraint == null || constraint.length() == 0){
+                filteredList.addAll(prodDocsListCopy);
+                filterePicsList.addAll(prodImagesListCopy);
+            }
+            else{
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for(DocumentSnapshot doc : prodDocsListCopy){
+                    if(doc.get("prodname").toString().toLowerCase().contains(filterPattern)){
+                        filteredList.add(doc);
+                        filterePicsList.add(prodImagesListCopy.get(prodDocsListCopy.indexOf(doc)));
+                    }
+                    else if(doc.get("reason").toString().toLowerCase().contains(filterPattern)){
+                        filteredList.add(doc);
+                        filterePicsList.add(prodImagesListCopy.get(prodDocsListCopy.indexOf(doc)));
+                    }
+                    else if(doc.get("status").toString().toLowerCase().contains(filterPattern)){
+                        filteredList.add(doc);
+                        filterePicsList.add(prodImagesListCopy.get(prodDocsListCopy.indexOf(doc)));
+                    }
+                }
+            }
+
+            FilterResults Docresults = new FilterResults();
+            Docresults.values = filteredList;
+
+            return Docresults;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            prodDocsList.clear();
+            prodDocsList.addAll((ArrayList)results.values);
+            FilterResults imgResults = new FilterResults();
+            imgResults.values = filterePicsList;
+            prodImagesList.clear();
+            prodImagesList.addAll((ArrayList)imgResults.values);
+
+            notifyDataSetChanged();
+        }
+    };
 
     public class ReplacementViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 

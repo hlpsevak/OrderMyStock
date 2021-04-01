@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,16 +26,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class OrdersPlacedReceivedAdapter extends RecyclerView.Adapter<OrdersPlacedReceivedAdapter.OrdersPlacedViewholder> {
+public class OrdersPlacedReceivedAdapter extends RecyclerView.Adapter<OrdersPlacedReceivedAdapter.OrdersPlacedViewholder> implements Filterable {
 
-    ArrayList<Object> arrAllOrders = new ArrayList<>();
+    ArrayList<Object> arrAllOrders;
+    ArrayList<Object> arrAllOrdersCopy ;
     LayoutInflater inflater;
     String compshop, comporshop;
     static OrdersPlacedViewholder mholder;
     View mItemView;
 
     public OrdersPlacedReceivedAdapter(Context context, ArrayList<Object> arrOrders, String compshop){
-        arrAllOrders = arrOrders;
+        arrAllOrders = new ArrayList<>(arrOrders);
+        arrAllOrdersCopy = new ArrayList<>(arrOrders);
         inflater = LayoutInflater.from(context);
         if(compshop.equals("companies")){
             this.compshop = "shopname";
@@ -80,6 +84,47 @@ public class OrdersPlacedReceivedAdapter extends RecyclerView.Adapter<OrdersPlac
     public int getItemCount() {
         return arrAllOrders.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return exampleFilter;
+    }
+
+    private Filter exampleFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            ArrayList<Object> filteredList = new ArrayList<>();
+            if(constraint == null || constraint.length() == 0){
+                filteredList.addAll(arrAllOrdersCopy);
+            }
+            else{
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for(Object obj : arrAllOrdersCopy){
+                    Map<String, Object> m = (Map<String, Object>) obj;
+                    if(m.get("prodname").toString().toLowerCase().contains(filterPattern)){
+                        filteredList.add(obj);
+                    }
+                    else if(m.get("ordstatus").toString().toLowerCase().contains(filterPattern)){
+                        filteredList.add(obj);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            arrAllOrders.clear();
+            arrAllOrders.addAll((ArrayList)results.values);
+
+            notifyDataSetChanged();
+        }
+    };
 
     public class OrdersPlacedViewholder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView tvOrdId, tvOrdCompShop, tvOrdProdName, tvOrdProdQnty, tvOrdPrice, tvOrdStatus, tvOrdStatusResult;

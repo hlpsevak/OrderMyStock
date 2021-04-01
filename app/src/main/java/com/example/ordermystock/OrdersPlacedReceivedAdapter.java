@@ -22,7 +22,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,6 +36,9 @@ public class OrdersPlacedReceivedAdapter extends RecyclerView.Adapter<OrdersPlac
     String compshop, comporshop;
     static OrdersPlacedViewholder mholder;
     View mItemView;
+
+    String dateString="";
+    Date mDate;
 
     public OrdersPlacedReceivedAdapter(Context context, ArrayList<Object> arrOrders, String compshop){
         arrAllOrders = new ArrayList<>(arrOrders);
@@ -67,8 +72,14 @@ public class OrdersPlacedReceivedAdapter extends RecyclerView.Adapter<OrdersPlac
         holder.tvOrdProdName.setText("Product name:  " + m.get("prodname").toString());
         holder.tvOrdProdQnty.setText("Quantity:  " + m.get("prodqnty").toString());
         holder.tvOrdPrice.setText("Price:  " + m.get("prodprice").toString());
+        holder.tvOrderDates.setText("Order Placed: "+m.get("orderplaceddate"));
+        if(!m.get("orderdelivereddate").equals(""))
+            holder.tvOrderDates.append("\nOrder delivered: "+m.get("orderdelivereddate"));
+        if(!m.get("ordercancelleddate").equals(""))
+            holder.tvOrderDates.append("\nOrder Cancelled: "+m.get("ordercancelleddate"));
         String status = m.get("ordstatus").toString();
         holder.tvOrdStatusResult.setText(status);
+
         Log.d("STATUS: ",status);
         if(status.equals("Delivered") || status.equals("Cancelled")){
             holder.btnCancelDeliverOrder.setVisibility(View.GONE);
@@ -108,6 +119,15 @@ public class OrdersPlacedReceivedAdapter extends RecyclerView.Adapter<OrdersPlac
                     else if(m.get("ordstatus").toString().toLowerCase().contains(filterPattern)){
                         filteredList.add(obj);
                     }
+                    else if(m.get("orderplaceddate").toString().toLowerCase().contains(filterPattern)){
+                        filteredList.add(obj);
+                    }
+                    else if(m.get("ordercancelleddate").toString().toLowerCase().contains(filterPattern)){
+                        filteredList.add(obj);
+                    }
+                    else if(m.get("orderdelivereddate").toString().toLowerCase().contains(filterPattern)){
+                        filteredList.add(obj);
+                    }
                 }
             }
 
@@ -127,10 +147,12 @@ public class OrdersPlacedReceivedAdapter extends RecyclerView.Adapter<OrdersPlac
     };
 
     public class OrdersPlacedViewholder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView tvOrdId, tvOrdCompShop, tvOrdProdName, tvOrdProdQnty, tvOrdPrice, tvOrdStatus, tvOrdStatusResult;
+        TextView tvOrdId, tvOrdCompShop, tvOrdProdName, tvOrdProdQnty, tvOrdPrice, tvOrdStatus,
+                tvOrdStatusResult, tvOrderDates;
         OrdersPlacedReceivedAdapter ordersPlacedReceivedAdapter;
         Button btnCancelDeliverOrder;
         int mProdPosition;
+
 
         public OrdersPlacedViewholder(@NonNull View itemView, OrdersPlacedReceivedAdapter ordersPlacedReceivedAdapter) {
             super(itemView);
@@ -141,6 +163,7 @@ public class OrdersPlacedReceivedAdapter extends RecyclerView.Adapter<OrdersPlac
             tvOrdProdQnty = itemView.findViewById(R.id.tv_prodqnty_placedreceived);
             tvOrdPrice = itemView.findViewById(R.id.tv_price_placedreceived);
             tvOrdStatusResult = itemView.findViewById(R.id.tv_ord_status_result);
+            tvOrderDates = itemView.findViewById(R.id.tv_order_dates);
             btnCancelDeliverOrder = itemView.findViewById(R.id.btn_cancel_deliver_order);
             mItemView = itemView;
 
@@ -186,6 +209,12 @@ public class OrdersPlacedReceivedAdapter extends RecyclerView.Adapter<OrdersPlac
                             tv.setText("cancelled");
                             Button btnCancelDeliver = itemView.findViewById(R.id.btn_cancel_deliver_order);
                             btnCancelDeliver.setVisibility(View.GONE);
+                            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                            Date date = new Date();
+                            dateString = formatter.format(date);
+                            tv = itemView.findViewById(R.id.tv_order_dates);
+                            itemView.findViewById(mProdPosition);
+                            tv.append("\nOrder cancelled: "+dateString);
                         }
                     });
                     alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "cancel", new DialogInterface.OnClickListener() {
@@ -218,6 +247,12 @@ public class OrdersPlacedReceivedAdapter extends RecyclerView.Adapter<OrdersPlac
                             btnCancelDeliver.setVisibility(View.GONE);
                             itemView.findViewById(mProdPosition);
                             tv.setText("Delivered");
+                            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                            Date date = new Date();
+                            dateString = formatter.format(date);
+                            tv = itemView.findViewById(R.id.tv_order_dates);
+                            itemView.findViewById(mProdPosition);
+                            tv.append("\nOrder delivered: "+dateString);
 
                         }
                     });
@@ -246,6 +281,12 @@ public class OrdersPlacedReceivedAdapter extends RecyclerView.Adapter<OrdersPlac
                 Map<String, String> map = (Map<String, String>) maps.get(prodName);
                 Map<String, Map<String, String>> mapmap = new HashMap<>();
                 map.put("ordstatus","Cancelled");
+                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                Date date = new Date();
+                dateString = formatter.format(date);
+                //mholder.tvOrderDates.append("\norder Cancelled: "+dateString);
+
+                map.put("ordercancelleddate",dateString);
                 maps.put(prodName,map);
 
                 FirebaseFirestore firebaseFirestore1 = FirebaseFirestore.getInstance();
@@ -255,7 +296,9 @@ public class OrdersPlacedReceivedAdapter extends RecyclerView.Adapter<OrdersPlac
                         .set(maps).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        mholder.tvOrdStatusResult.setText("Cancelled");
+                        //mholder.tvOrdStatusResult.setText("Cancelled");
+
+
 
                         FirebaseFirestore firebaseFirestore2 = FirebaseFirestore.getInstance();
                         firebaseFirestore2.collection("ordermystock").document("userdoc")
@@ -290,6 +333,11 @@ public class OrdersPlacedReceivedAdapter extends RecyclerView.Adapter<OrdersPlac
                 Map<String, String> map = (Map<String, String>) maps.get(prodName);
                 Map<String, Map<String, String>> mapmap = new HashMap<>();
                 map.put("ordstatus","Delivered");
+                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                Date date = new Date();
+                dateString = formatter.format(date);
+                map.put("orderdelivereddate",dateString);
+                //mholder.tvOrderDates.append("\nOrder delivered: "+dateString);
                 maps.put(prodName,map);
 
                 FirebaseFirestore firebaseFirestore1 = FirebaseFirestore.getInstance();
@@ -299,7 +347,8 @@ public class OrdersPlacedReceivedAdapter extends RecyclerView.Adapter<OrdersPlac
                         .set(maps).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        mholder.tvOrdStatusResult.setText("Delivered");
+
+                        //mholder.tvOrdStatusResult.setText("Delivered");
 
                         FirebaseFirestore firebaseFirestore2 = FirebaseFirestore.getInstance();
                         firebaseFirestore2.collection("ordermystock").document("userdoc")

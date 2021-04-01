@@ -27,7 +27,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -47,6 +49,7 @@ public class ReplacementAdapter extends RecyclerView.Adapter<ReplacementAdapter.
     SharedPreferences prefs;
     String comporshop;
     ArrayList<byte[]> filterePicsList;
+    String dateString;
 
 
     public ReplacementAdapter(Context context, ArrayList<DocumentSnapshot> arrdocs, ArrayList<byte[]> arrimages){
@@ -83,6 +86,17 @@ public class ReplacementAdapter extends RecyclerView.Adapter<ReplacementAdapter.
         holder.tvReplaceReason.setText("Reason: "+prodDocsList.get(position).getString("reason"));
         holder.tvProdPrice.setText("Product Price: "+prodDocsList.get(position).getString("prodprice"));
         holder.tvStatus.setText("Request status: "+prodDocsList.get(position).getString("status"));
+        holder.tvReplaceDates.setText("Applied: "+prodDocsList.get(position).getString("applieddate"));
+        if(!prodDocsList.get(position).getString("accepteddate").equals("")){
+            holder.tvReplaceDates.append("\nAccepted: "+prodDocsList.get(position).getString("accepteddate"));
+        }
+        if(!prodDocsList.get(position).getString("rejecteddate").equals("")){
+            holder.tvReplaceDates.append("\nRejected: "+prodDocsList.get(position).getString("rejecteddate"));
+        }
+        if(!prodDocsList.get(position).getString("replaceddate").equals("")){
+            holder.tvReplaceDates.append("\nReplaced: "+prodDocsList.get(position).getString("replaceddate"));
+        }
+
         if(comporshop.equals("shops")){
             holder.btnReject.setVisibility(View.GONE);
             holder.btnAccept.setVisibility(View.GONE);
@@ -162,7 +176,7 @@ public class ReplacementAdapter extends RecyclerView.Adapter<ReplacementAdapter.
     public class ReplacementViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ImageView mImageView;
-        TextView tvProdName, tvReplaceReason, tvProdPrice, tvStatus, tvShopName;
+        TextView tvProdName, tvReplaceReason, tvProdPrice, tvStatus, tvShopName, tvReplaceDates;
         Button btnAccept, btnReject;
         ProductListForShopAdapter productListForShopAdapter;
         int posItemClicked;
@@ -181,6 +195,7 @@ public class ReplacementAdapter extends RecyclerView.Adapter<ReplacementAdapter.
             tvProdPrice = itemView.findViewById(R.id.tv_replace_productprice);
             tvStatus = itemView.findViewById(R.id.tv_replace_status);
             tvShopName = itemView.findViewById(R.id.tv_replace_shopname);
+            tvReplaceDates = itemView.findViewById(R.id.tv_replace_dates);
             btnAccept = itemView.findViewById(R.id.btn_btn_replace_accept);
             btnReject = itemView.findViewById(R.id.btn_replace_reject);
             btnAccept.setOnClickListener(this::onClick);
@@ -203,6 +218,7 @@ public class ReplacementAdapter extends RecyclerView.Adapter<ReplacementAdapter.
         }
 
         public void acceptReplacement(){
+
             int pos = getLayoutPosition();
             btnReject.setText("Mark as Replaced");
             btnAccept.setVisibility(View.GONE);
@@ -213,6 +229,14 @@ public class ReplacementAdapter extends RecyclerView.Adapter<ReplacementAdapter.
             currMap.put("status","Accpeted");
             currMap.put("reject","Mark as Replaced");
             String currShopId = currMap.get("shopid").toString();
+
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            Date date = new Date();
+            dateString = formatter.format(date);
+            currMap.put("accepteddate", dateString);
+            TextView tv = itemView.findViewById(R.id.tv_replace_dates);
+            itemView.findViewById(getLayoutPosition());
+            tv.append("\nAccepted : "+dateString);
 
             FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
             firebaseFirestore.collection("ordermystock").document("userdoc")
@@ -247,6 +271,14 @@ public class ReplacementAdapter extends RecyclerView.Adapter<ReplacementAdapter.
             currMap.put("reject","Mark as Replaced");
             String currShopId = currMap.get("shopid").toString();
 
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            Date date = new Date();
+            dateString = formatter.format(date);
+            currMap.put("rejecteddate", dateString);
+            TextView tv = itemView.findViewById(R.id.tv_replace_dates);
+            itemView.findViewById(getLayoutPosition());
+            tv.append("\nRejected : "+dateString);
+
             FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
             firebaseFirestore.collection("ordermystock").document("userdoc")
                     .collection("companies").document(FirebaseAuth.getInstance().getCurrentUser().getUid())
@@ -279,6 +311,14 @@ public class ReplacementAdapter extends RecyclerView.Adapter<ReplacementAdapter.
             currMap.put("status","Replaced");
             currMap.put("reject","Mark as Replaced");
             String currShopId = currMap.get("shopid").toString();
+
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            Date date = new Date();
+            dateString = formatter.format(date);
+            currMap.put("replaceddate", dateString);
+            TextView tv = itemView.findViewById(R.id.tv_replace_dates);
+            itemView.findViewById(getLayoutPosition());
+            tv.append("\nReplaced : "+dateString);
 
             FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
             firebaseFirestore.collection("ordermystock").document("userdoc")

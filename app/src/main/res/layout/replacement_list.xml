@@ -73,6 +73,16 @@
             android:textSize="18dp"
             android:layout_marginHorizontal="5dp"/>
 
+        <TextView
+            android:id="@+id/tv_replace_dates"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="12/12/21"
+            android:layout_marginTop="10dp"
+            android:textAlignment="center"
+            android:textSize="18dp"
+            android:layout_marginHorizontal="5dp"/>
+
 
         <LinearLayout
             android:layout_width="match_parent"

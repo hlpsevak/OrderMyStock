@@ -37,7 +37,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -254,6 +256,13 @@ public class ReplacementFrag extends Fragment {
                 prodData.put("shopname",prefs.getString("compshopname", "def"));
                 prodData.put("accept","Accept");
                 prodData.put("reject","Reject");
+
+                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                Date date = new Date();
+                prodData.put("applieddate",formatter.format(date));
+                prodData.put("accepteddate","");
+                prodData.put("rejecteddate","");
+                prodData.put("replaceddate","");
 
                 uploadData();
             }

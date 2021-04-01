@@ -32,7 +32,11 @@ import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.lang.reflect.Array;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -237,6 +241,11 @@ public class ProductListForShopAdapter extends RecyclerView.Adapter<ProductListF
                         mapOrderDetails.put("shopid", FirebaseAuth.getInstance().getCurrentUser().getUid());
                         mapOrderDetails.put("ordstatus","pending");
 
+                        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                        Date date = new Date();
+                        mapOrderDetails.put("orderplaceddate",formatter.format(date).toString());
+                        mapOrderDetails.put("orderdelivereddate", "");
+                        mapOrderDetails.put("ordercancelleddate", "");
 
                         mapOrders.put(docClicked.getString("prodname"), mapOrderDetails);
                         mapOrderDetails = new HashMap<>();
